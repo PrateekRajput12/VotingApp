@@ -25,8 +25,12 @@ router.post("/",jwtAuthMiddleware,async(req,res)=>{
        }
         const data=req.body
 
+      //   create a new user document using mongoose model 
+
         const newCandidate=new Candidate(data)
         console.log(newUser);
+
+      //   save the new user to th candidate
         const response=await newCandidate.save()
   
         
@@ -48,7 +52,7 @@ router.put("/:candidateID",jwtAuthMiddleware,async (req,res)=>{
         return res.status(403).json({message:"user does not have admin role "})
        }
 
-       const candidateID=req.params.id
+       const candidateID=req.params.candidateID
        const updatedCandidateData=req.body
 
        const response=await Candidate.findByIdAndUpdate(candidateID,updatedCandidateData,{
@@ -74,7 +78,7 @@ router.delete("/:candidateID",jwtAuthMiddleware,async (req,res)=>{
          return res.status(403).json({message:"user has not admin role "})
         }
  
-        const candidateID=req.params.id
+        const candidateID=req.params.candidateID
         // const updatedCandidateData=req.body
  
         const response=await Candidate.findByIdAndDelete(candidateID)
@@ -95,7 +99,7 @@ router.delete("/:candidateID",jwtAuthMiddleware,async (req,res)=>{
 
 
 
-router.post("/vote/:candidateID",jwtAuthMiddleware,async(req,res)=>{
+router.get("/vote/:candidateID",jwtAuthMiddleware,async(req,res)=>{
 // no admin ca n vote 
 
 // user can only vote once
@@ -157,10 +161,13 @@ console.log(E)
 router.get("/candidate",async(req,res)=>{
    try{
 // list of canddidate 
+const candidates=await Candidate.find({},'name party -_id')
 
 
+res.status(200).json(candidates)
    }catch(e){
-
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
    }
 })
 
