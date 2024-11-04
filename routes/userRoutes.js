@@ -23,8 +23,8 @@ router.post("/signup",async(req,res)=>{
         }
         console.log(JSON.stringify(payload));
         const token=generateToken(payload)
-        console.log("Token is Generated",);
-        res.status(200).json({response:response,token:"token generated"})
+        console.log("Token is Generated",token);
+        res.status(200).json({response:response,token:token})
      }catch(err){
 console.log(err,"error in routes");
 res.status(500).json({error:"Internal Server Error"})
